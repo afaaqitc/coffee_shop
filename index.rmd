@@ -24,9 +24,9 @@ library(readxl)
 library(readODS)
 library(DT)
  
-setwd("~/Data/Learn/R_Projects/coffee/")
+setwd("~/Documents/GitHub/AFAAQITC-Report/coffee_shop/")
 
-fi<-read.csv(file = "nn .csv")
+fi<-read.csv(file = "coffee.csv")
 
 fi<-
 fi %>% select(- 1) %>%mutate(date=as.POSIXct(datetime),dates=as.Date(datetime))%>%
@@ -71,7 +71,7 @@ fi %>% mutate(mn=paste0(month(as.Date(datetime)),"-",months)) %>%
   group_by(months=factor(months,levels=c("Mar","Apr","May","Jun","Jul"))) %>% 
   summarize(total=comma(sum(money)))  %>% 
   ggplot(aes(x=months,y=total,fill=months))+geom_bar(stat = "identity")+
-  geom_text(aes(label=total),size=3.5,fontface = "bold",color="white",position = position_stack(vjust = 0.5))+
+  geom_text(aes(label=comma(total,digits = 0)),size=3.5,fontface = "bold",color="white",position = position_stack(vjust = 0.5))+
   theme_bw()+
   scale_fill_brewer(palette = "Set1")+
   theme(axis.text.x = element_text(face = "bold",colour = "black",size =11),
@@ -123,7 +123,7 @@ formatCurrency(columns =5 ,digits = 2) %>% formatPercentage(columns = 6,digits =
 item_totals_chart<-
 item_totals %>% ggplot(aes(x=reorder(coffee_name,total),y=total,fill = coffee_name))+
 geom_bar(stat = "identity")+
-  geom_text(aes(label=total),size=2.5,color="white",
+  geom_text(aes(label=comma(total,digits = 2)),size=2.5,color="white",
 position = position_stack(vjust = 0.5))+
 labs(x="",y="",
 subtitle = paste0("Total: ",comma(sum(fi$money),2)," | ",
@@ -152,7 +152,7 @@ fi %>% group_by(cash_type=as.factor(cash_type)) %>%
 summarize(total=comma(sum(money),1)) %>%
 ggplot(aes(x="",y=total,fill=cash_type))+geom_bar(stat = "identity")+
 coord_polar(theta = "y")+theme_void()+
-geom_text(aes(label=total),size=4.5,color="white",
+geom_text(aes(label=comma(total,digits = 2)),size=4.5,color="white",
 position = position_stack(vjust = 0.5))+
 scale_fill_brewer(palette = "Set1")+
   labs(x="",y="",
@@ -176,7 +176,7 @@ formatPercentage(columns = 4,digits = 2) %>% formatCurrency(columns = 3,digits =
 days_totals_chart<-
 days_totals %>% mutate(profit=comma(total)) %>% 
 ggplot(aes(x=days,y=profit,fill = days))+geom_bar(stat = "identity")+
-geom_text(aes(label=profit),size=4.5,color="white",
+geom_text(aes(label=comma(profit,digits = 2)),size=4.5,color="white",
 position = position_stack(vjust = 0.5))+
 scale_fill_brewer(palette = "Set1")+
 labs(x="",y="",
@@ -195,7 +195,7 @@ axis.text.y = element_text(face = "bold",colour = "black",size = 9),legend.posit
 
 ### Sales
 ```{r}
-valueBox(value = comma(sum(fi$money)),caption ="Sales" ,icon ="fa fa-money" ,color ="#b2bec3" )
+valueBox(value = comma(sum(fi$money),digits = 2),caption ="Sales" ,icon ="fa fa-money" ,color ="#b2bec3" )
 ```
 
 ### Orders 
